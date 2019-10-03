@@ -6,6 +6,7 @@ This repository contains libraries designed for general purpose multi-dimensiona
 This library implements the 3D and 4D phase-unwrapping algorithm based on sorting by reliability following a noncontinuous path. 3D algorithm is based on the following publication:
 
 ***H.S. Abdul-Rahman, M.A. Gdeisat, D.R. Burton, M.J. Lalor, F. Lilley, and C.J. Moore. Fast and robust three-dimensional best path phase unwrapping algorithm. Applied Optics 2007;46(26):6623-35.***
+
 The 4D algorithm is based on the 3D algorithm.
 
 ## Requirements
