@@ -35,23 +35,23 @@ libsrncp_test4d
 ```
 
 ## Use
-* Unwrap3D and Unwrap4D functions use *phase* and *mask* arguments in the header for both input and output. On the function call, the *phase* variable should contain the pointer to the wrapped phase array, which is unwrapped after the execution, rewriting original (wrapped) values. The *mask* variable is a pointer to an array that contains 1 for valid and 0 for invalid voxels. During the unwrapping process, neighboring voxels (along each of 3 or 4 dimensions) are grouped together. In the end, voxels that belong to contiguous regions in the image appear in the same group, and those belonging to discontiguous regions appear in a different group. There may be a phase jump between these regions that will not be unwrapped. The algorithm has a flag *mask_largest_unwrapped_group* to show the positions of the voxels in the largest contiguous region.
+* Unwrap3D and Unwrap4D functions use **phase** and **mask** arguments in the header for both input and output. On the function call, the **phase** variable should contain the pointer to the wrapped phase array, which is unwrapped after the execution, rewriting original (wrapped) values. The **mask** variable is a pointer to an array that contains 1 for valid and 0 for invalid voxels. During the unwrapping process, neighboring voxels (along each of 3 or 4 dimensions) are grouped together. In the end, voxels that belong to contiguous regions in the image appear in the same group, and those belonging to discontiguous regions appear in a different group. There may be a phase jump between these regions that will not be unwrapped. The algorithm has a flag **mask_largest_unwrapped_group** to show the positions of the voxels in the largest contiguous region.
 
 * Unwrap3D function takes 6 arguments (check also comments in libsrncp.cpp code in `src` folder)
-  - *h*: height, number of rows, integer
-  - *w*: width, number of columns, integer
-  - *d*: depth, number of planes, integer
-  - *phase*: pointer to phase array (wrapped on input, unwrapped on output), pointer to array of doubles
-  - *mask*: pointer to mask array, pointer to array of integers
-  - *mask_largest_unwrapped_group*: flag used to rewrite mask with the voxel positions in the largest contiguous set of unwrapped voxels
+  - **h**: height, number of rows, integer
+  - **w**: width, number of columns, integer
+  - **d**: depth, number of planes, integer
+  - **phase**: pointer to phase array (wrapped on input, unwrapped on output), pointer to array of doubles
+  - **mask**: pointer to mask array, pointer to array of integers
+  - **mask_largest_unwrapped_group**: flag used to rewrite mask with the voxel positions in the largest contiguous set of unwrapped voxels
 
 * Unwrap4D function takes 7 arguments (check also comments in libsrncp.cpp code in `src` folder)
-  - *h*: height, number of rows, integer
-  - *w*: width, number of columns, integer
-  - *d*: depth, number of planes, integer
-  - *s*: number of slabs (3d volumes), the length of the 4th dimension, or the spissitude
-  - *phase*: pointer to phase array (wrapped on input, unwrapped on output), pointer to array of doubles
-  - *mask*: pointer to mask array, pointer to array of integers
-  - *mask_largest_unwrapped_group*: flag used to rewrite mask with the voxel positions in the largest contiguous set of unwrapped voxels
+  - **h**: height, number of rows, integer
+  - **w**: width, number of columns, integer
+  - **d**: depth, number of planes, integer
+  - **s**: number of slabs (3d volumes), the length of the 4th dimension, or the spissitude
+  - **phase**: pointer to phase array (wrapped on input, unwrapped on output), pointer to array of doubles
+  - **mask**: pointer to mask array, pointer to array of integers
+  - **mask_largest_unwrapped_group**: flag used to rewrite mask with the voxel positions in the largest contiguous set of unwrapped voxels
 
 * Arrays should be stored in the column-major order, i.e. in 4d case to the ith row, jth column, kth plane and pth slab in array corresponds the linear index `[i + j*h + k*h*w + p*h*w*d]`.
