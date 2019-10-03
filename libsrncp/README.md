@@ -1,5 +1,5 @@
 # SRNCP Phase unwrapping
-This folder contains the library implementing the 3D and 4D phase-unwrapping algorithm based on sorting by reliability following a noncontinuous path.
+This folder contains the library implementing the 3D and 4D phase-unwrapping algorithm based on sorting by reliability following a noncontinuous path (SRNCP).
 
 ## References
 * For the 3D algorithm:
