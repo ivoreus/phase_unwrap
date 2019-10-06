@@ -176,7 +176,7 @@ EXPORTED_FUNCTION void Unwrap3D(int h, int w, int d, double* phase, int* mask, i
 	};
 
     // the voxel quality map
-    double *vqmap = new double[h * w * d];
+    vector <double> vqmap(h * w * d);
     int inmask;
     int ci,cj,ck;
     double val;
@@ -185,7 +185,7 @@ EXPORTED_FUNCTION void Unwrap3D(int h, int w, int d, double* phase, int* mask, i
     //srand(1); // FOR DEBUGGING ONLY!
 
     // Calculate voxel quality (second differences) map 
-    int *sdflag = new int[3*3*3];
+    vector<int> sdflag(3*3*3);
     for (i = 0; i < h; i++)
         for (j = 0; j < w; j++)
             for (k = 0; k < d; k++)
@@ -206,7 +206,7 @@ EXPORTED_FUNCTION void Unwrap3D(int h, int w, int d, double* phase, int* mask, i
 
                 // calculate and sum up horizontal, vertical, normal and 10 diagonal second differences
                 val = 0;                
-                fill(sdflag, sdflag+3*3*3, 0);
+                fill(sdflag.begin(), sdflag.end(), 0);
                 for (ci = -1; ci < 2; ci++)
                     for (cj = -1; cj < 2; cj++)
                         for (ck = -1; ck < 2; ck++)
@@ -223,19 +223,19 @@ EXPORTED_FUNCTION void Unwrap3D(int h, int w, int d, double* phase, int* mask, i
 
     typedef tuple<int, int, int, int, double> Edge;    
     // the list of edges that we will sort later
-    Edge* EdgeList = new Edge[h * w * d * 3];
+    vector <Edge> EdgeList(h * w * d * 3);    
 
     // Reference tables used for grouping voxels together
     // the array that stores the index of the first voxel in the group to which belongs the indexed voxel
-    int *VoxelGroupFirst = new int[h * w * d];
+    vector <int> VoxelGroupFirst(h * w * d);    
     // the array that stores the index of the next voxel in the group to which belongs the indexed voxel
-    int *VoxelGroupNext = new int[h * w * d];
+    vector <int> VoxelGroupNext(h * w * d);
     // the array that stores the index of the last voxel in the group to which belongs the indexed voxel
     // the indexed voxel should be first in its group, otherwise reference is not valid
-    int *VoxelGroupLast = new int[h * w * d];
+    vector <int> VoxelGroupLast(h * w * d);
     // the array that stores the size of the group to which belongs the indexed voxel
     // the indexed voxel should be first in its group, otherwise reference is not valid
-    int *VoxelGroupSize = new int[h * w * d];
+    vector <int> VoxelGroupSize(h * w * d);
     
     // Calculate edge qualities and initialize voxel group index matrix VoxelGroupInd to -1 (set voxel as non-unwrapped)
     int valid_ex, valid_ey, valid_ez; // flags to check if we can calculate x, y, z edge quality
@@ -307,11 +307,11 @@ EXPORTED_FUNCTION void Unwrap3D(int h, int w, int d, double* phase, int* mask, i
                 EdgeList[i + j * h + k * h * w + 2 * h * w * d] = {i,j,k,2,val};
             }
     // we do not need voxel quality map anymore
-    delete [] vqmap;
+    vqmap.clear();
 
     // sort the edge list in the order of descending quality (ascending value)
-    sort(EdgeList, EdgeList + h * w * d * 3, [](const Edge &a, const Edge &b) {return (get<4>(a) < get<4>(b));});
-    
+    sort(EdgeList.begin(), EdgeList.end(), [](const Edge &a, const Edge &b) {return (get<4>(a) < get<4>(b));});
+
     int t; // Edge type (0=x, 1=y, 2=z)
     int g_i, g_ci; // Group index for the first voxel in the edge (i,j,k) and second voxel (ci,cj,ck);
     int n,vi,vj,vk,vci,vcj,vck;
@@ -493,12 +493,6 @@ EXPORTED_FUNCTION void Unwrap3D(int h, int w, int d, double* phase, int* mask, i
         }   
     }
     
-    delete [] EdgeList;
-
-    delete [] VoxelGroupFirst;
-    delete [] VoxelGroupNext;
-    delete [] VoxelGroupLast;
-    delete [] VoxelGroupSize;
     if (verbose == 1) fclose(logfile);
 }
 
@@ -517,8 +511,8 @@ EXPORTED_FUNCTION void Unwrap3D(int h, int w, int d, double* phase, int* mask, i
 
 EXPORTED_FUNCTION void Unwrap4D(int h, int w, int d, int s, double* phase, int* mask, int mask_largest_unwrapped_group)
 {
-	int i, j, k, p, m, found_nonzero_el, imh = h, imw = w, imd = d, ims = s; // save original dimensions for IM
-	int minrow = 0, maxrow = 0, mincol = 0, maxcol = 0, minslc = 0, maxslc = 0, minvol = 0, maxvol = 0;
+    int i, j, k, p, m, found_nonzero_el, imh = h, imw = w, imd = d, ims = s; // save original dimensions for IM
+    int minrow = 0, maxrow = 0, mincol = 0, maxcol = 0, minslc = 0, maxslc = 0, minvol = 0, maxvol = 0;
                 
     // Create a second pointer to the arrays in the function input
     // to be able to shift it
@@ -644,7 +638,7 @@ EXPORTED_FUNCTION void Unwrap4D(int h, int w, int d, int s, double* phase, int* 
 	};
 
     // the voxel quality map
-    double *vqmap = new double[h * w * d * s];
+    vector <double> vqmap(h * w * d * s);
     int inmask;
     int ci,cj,ck,cp;
     double val;
@@ -653,7 +647,7 @@ EXPORTED_FUNCTION void Unwrap4D(int h, int w, int d, int s, double* phase, int* 
     //srand(1); // FOR DEBUGGING ONLY!
 
     // Calculate voxel quality (second differences) map 
-    int *sdflag = new int[3*3*3*3];
+    vector<int> sdflag(3*3*3*3);
     for (i = 0; i < h; i++)
         for (j = 0; j < w; j++)
             for (k = 0; k < d; k++)
@@ -676,7 +670,7 @@ EXPORTED_FUNCTION void Unwrap4D(int h, int w, int d, int s, double* phase, int* 
                     
                     // calculate and sum up horizontal, vertical, normal and 10 diagonal second differences
                     val = 0;
-                    fill(sdflag, sdflag+3*3*3*3, 0);
+                    fill(sdflag.begin(), sdflag.end(), 0);
                     for (ci = -1; ci < 2; ci++)
                         for (cj = -1; cj < 2; cj++)
                             for (ck = -1; ck < 2; ck++)
@@ -694,19 +688,19 @@ EXPORTED_FUNCTION void Unwrap4D(int h, int w, int d, int s, double* phase, int* 
 
     typedef tuple<int, int, int, int, int, double> Edge;    
     // the list of edges that we will sort later
-    Edge* EdgeList = new Edge[h * w * d * s * 4];
+    vector <Edge> EdgeList(h * w * d * s * 4);
 
     // Reference tables used for grouping voxels together
     // the array that stores the index of the first voxel in the group to which belongs the indexed voxel
-    int *VoxelGroupFirst = new int[h * w * d * s];
+    vector <int> VoxelGroupFirst(h * w * d * s); 
     // the array that stores the index of the next voxel in the group to which belongs the indexed voxel
-    int *VoxelGroupNext = new int[h * w * d * s];
+    vector <int> VoxelGroupNext(h * w * d * s);
     // the array that stores the index of the last voxel in the group to which belongs the indexed voxel
     // the indexed voxel should be first in its group, otherwise reference is not valid
-    int *VoxelGroupLast = new int[h * w * d * s];
+    vector <int> VoxelGroupLast(h * w * d * s);
     // the array that stores the size of the group to which belongs the indexed voxel
     // the indexed voxel should be first in its group, otherwise reference is not valid
-    int *VoxelGroupSize = new int[h * w * d * s];
+    vector <int> VoxelGroupSize(h * w * d * s);
     
     // Calculate edge qualities and initialize voxel group index matrix VoxelGroupInd to -1 (set voxel as non-unwrapped)
     int valid_ex, valid_ey, valid_ez, valid_es; // flags to check if we can calculate x, y, z, s edge quality
@@ -793,10 +787,10 @@ EXPORTED_FUNCTION void Unwrap4D(int h, int w, int d, int s, double* phase, int* 
                     else val = 1e11;
                     EdgeList[i + j * h + k * h * w + p * h * w * d + 3 * h * w * d * s] = {i,j,k,p,3,val};               }
     // we do not need voxel quality map anymore
-    delete [] vqmap;
+    vqmap.clear();
 
     // sort the edge list in the order of descending quality (ascending value)
-    sort(EdgeList, EdgeList + h * w * d * s * 4, [](const Edge &a, const Edge &b) {return (get<5>(a) < get<5>(b));});
+    sort(EdgeList.begin(), EdgeList.end(), [](const Edge &a, const Edge &b) {return (get<5>(a) < get<5>(b));});
     
     int t; // Edge type (0=x, 1=y, 2=z, 3=s)
     int g_i, g_ci; // Group index for the first voxel in the edge (i,j,k) and second voxel (ci,cj,ck);
@@ -988,12 +982,6 @@ EXPORTED_FUNCTION void Unwrap4D(int h, int w, int d, int s, double* phase, int* 
         }   
     }
     
-    delete [] EdgeList;
-
-    delete [] VoxelGroupFirst;
-    delete [] VoxelGroupNext;
-    delete [] VoxelGroupLast;
-    delete [] VoxelGroupSize;
     if (verbose == 1) fclose(logfile);
 }
 
