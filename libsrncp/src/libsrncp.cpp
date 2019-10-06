@@ -80,8 +80,8 @@ const inline double gamma(const double angle)
 */
 EXPORTED_FUNCTION void Unwrap3D(int h, int w, int d, double* phase, int* mask, int mask_largest_unwrapped_group)
 {
-	int i, j, k, m, found_nonzero_el, imh = h, imw = w, imd = d; // save original dimensions for IM
-	int minrow = 0, maxrow = 0, mincol = 0, maxcol = 0, minslc = 0, maxslc = 0;
+    int i, j, k, m, found_nonzero_el, imh = h, imw = w, imd = d; // save original dimensions for IM
+    int minrow = 0, maxrow = 0, mincol = 0, maxcol = 0, minslc = 0, maxslc = 0;
                 
     // Create a second pointer to the arrays in the function input
     // to be able to shift it
